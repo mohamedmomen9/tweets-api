@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\AppBaseController;
 use App\Http\Resources\TweetResource;
 use Response;
+use Illuminate\Support\Facades\Auth;
 
 /**
  * Class TweetController
@@ -76,6 +77,14 @@ class TweetAPIController extends AppBaseController
      *      description="Store Tweet",
      *      produces={"application/json"},
      *      @SWG\Parameter(
+     *          name="bearer_token",
+     *          in="header",
+     *          description="Bearer token",
+     *          required=true,
+     *          type="string",
+     *          @SWG\Schema(ref="#/definitions/Follow")
+     *      ),
+     *      @SWG\Parameter(
      *          name="body",
      *          in="body",
      *          description="Tweet that should be stored",
@@ -106,7 +115,7 @@ class TweetAPIController extends AppBaseController
     public function store(CreateTweetAPIRequest $request)
     {
         $input = $request->all();
-
+        $input['user'] = Auth::id();
         /** @var Tweet $tweet */
         $tweet = Tweet::create($input);
 

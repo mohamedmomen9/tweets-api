@@ -18,5 +18,12 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+Route::post('register', 'AuthController@register');
+Route::post('login', 'AuthController@login');
 
-Route::resource('tweets', 'TweetAPIController');
+//Route::resource('tweets', 'TweetAPIController');
+
+Route::group(['middleware' => ['auth:sanctum']], function () {
+    Route::apiResource('v1/tweets', 'TweetAPIController');
+    Route::apiResource('v1/follow', 'FollowerAPIController');
+});

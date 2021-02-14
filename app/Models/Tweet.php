@@ -44,7 +44,7 @@ class Tweet extends Model
     use SoftDeletes;
 
     public $table = 'tweets';
-    
+
 
     protected $dates = ['deleted_at'];
 
@@ -52,7 +52,8 @@ class Tweet extends Model
 
     public $fillable = [
         'text_en',
-        'text_ar'
+        'text_ar',
+        'user'
     ];
 
     /**
@@ -63,7 +64,8 @@ class Tweet extends Model
     protected $casts = [
         'id' => 'integer',
         'text_en' => 'string',
-        'text_ar' => 'string'
+        'text_ar' => 'string',
+        'user'=>'integer',
     ];
 
     /**
@@ -72,9 +74,9 @@ class Tweet extends Model
      * @var array
      */
     public static $rules = [
-        'text_en' => 'required|max140',
-        'text_ar' => 'required|140'
+        'text_en' => 'required|max:140',
+        'text_ar' => 'required|max:140'
     ];
 
-    
+
 }
