@@ -2,14 +2,18 @@
 
 ## Contents
 
+- Users create, login and logout
 - Tweets
 - Followers
 - Timeline
+- full swagger ddocumentations
+- full unit testing
 
 ## Packages Installed
 
 - Senctum auth
 - swagger for documentation
+- enable sqlite php extenstions for testing
 
 ## Installation
 
