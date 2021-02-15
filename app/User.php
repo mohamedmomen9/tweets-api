@@ -24,7 +24,7 @@ class User extends Authenticatable
      *          property="password",
      *          description="password",
      *          type="string",
-     *          format="password"
+     *          format="string"
      *      )
      * )
      *
@@ -35,7 +35,7 @@ class User extends Authenticatable
      *          property="name",
      *          description="user name",
      *          type="string",
-     *          format="int32"
+     *          format="string"
      *      ),
      *      @SWG\Property(
      *          property="email",
@@ -53,7 +53,7 @@ class User extends Authenticatable
      *          property="confirm_password",
      *          description="password",
      *          type="string",
-     *          format="password"
+     *          format="string"
      *      ),
      *      @SWG\Property(
      *          property="image",

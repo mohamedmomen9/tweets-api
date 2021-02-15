@@ -32,4 +32,5 @@ Route::group(['middleware' => ['auth:sanctum'], 'prefix' => 'v1/'], function () 
     Route::get('follow','FollowerAPIController@index');
     Route::post('follow', 'FollowerAPIController@follow');
     Route::delete('unfollow/{id}', 'FollowerAPIController@unfollow');
+    Route::get('logout', 'AuthController@logout');
 });

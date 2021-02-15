@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use App\User;
 use App\Http\Controllers\AppBaseController;
+use Illuminate\Support\Facades\Auth;
 
 class AuthController extends AppBaseController
 {
@@ -19,11 +19,41 @@ class AuthController extends AppBaseController
      *      summary="Register new user",
      *      tags={"Register"},
      *      description="Create new user",
+     *      consumes={"multipart/form-data"},
      *      produces={"application/json"},
      *      @SWG\Parameter(
-     *          name="body",
-     *          in="body",
-     *          description="Register new user data",
+     *          name="name",
+     *          in="formData",
+     *          type="string",
+     *          required=true,
+     *          @SWG\Schema(ref="#/definitions/Register")
+     *      ),
+     *      @SWG\Parameter(
+     *          name="email",
+     *          in="formData",
+     *          type="string",
+     *          required=true,
+     *          @SWG\Schema(ref="#/definitions/Register")
+     *      ),
+     *      @SWG\Parameter(
+     *          name="password",
+     *          in="formData",
+     *          type="string",
+     *          required=true,
+     *          @SWG\Schema(ref="#/definitions/Register")
+     *      ),
+     *      @SWG\Parameter(
+     *          name="confirm-password",
+     *          in="formData",
+     *          type="string",
+     *          required=true,
+     *          @SWG\Schema(ref="#/definitions/Register")
+     *      ),
+     *      @SWG\Parameter(
+     *          name="image",
+     *          in="formData",
+     *          description="Upload an image",
+     *          type="file",
      *          required=false,
      *          @SWG\Schema(ref="#/definitions/Register")
      *      ),
@@ -50,11 +80,10 @@ class AuthController extends AppBaseController
      */
     public function register(Request $request)
     {
-        $email = User::where('email',$request->email)->first()->get();
-        if(count($email)){
+        $email = User::where('email', $request->email)->first();
+        if (!empty($email)) {
             return $this->sendError('User already exist!');
         }
-        return $request->all();
         $request->validate([
             'name' => 'required',
             'email' => 'required|email',
@@ -87,10 +116,17 @@ class AuthController extends AppBaseController
      *      description="login",
      *      produces={"application/json"},
      *      @SWG\Parameter(
-     *          name="body",
-     *          in="body",
-     *          description="Register new user data",
-     *          required=false,
+     *          name="email",
+     *          in="formData",
+     *          type="string",
+     *          required=true,
+     *          @SWG\Schema(ref="#/definitions/Login")
+     *      ),
+     *      @SWG\Parameter(
+     *          name="password",
+     *          in="formData",
+     *          type="string",
+     *          required=true,
      *          @SWG\Schema(ref="#/definitions/Login")
      *      ),
      *      @SWG\Response(
@@ -139,5 +175,52 @@ class AuthController extends AppBaseController
         return response()->json([
             'access_token' => $authToken,
         ]);
+    }
+
+
+
+    /**
+     * @param CreateLogoutApi $request
+     * @return Response
+     *
+     * @SWG\Get(
+     *      path="/logout",
+     *      summary="Logout",
+     *      tags={"Register"},
+     *      description="Logout",
+     *      produces={"application/json"},
+     *      @SWG\Parameter(
+     *          name="Authorization",
+     *          in="header",
+     *          description="Bearer token",
+     *          required=true,
+     *          type="string",
+     *      ),
+     *      @SWG\Response(
+     *          response=200,
+     *          description="successful operation",
+     *          @SWG\Schema(
+     *              type="object",
+     *              @SWG\Property(
+     *                  property="success",
+     *                  type="boolean"
+     *              ),
+     *              @SWG\Property(
+     *                  property="message",
+     *                  type="string"
+     *              )
+     *          )
+     *      )
+     * )
+     */
+    public function logout()
+    {
+        return Auth::id();
+        if (Auth::id()) {
+            $user = Auth::user();
+            $user->tokens()->where('id', $user->currentAccessToken()->id)->delete();
+            return $this->sendSuccess('Successfully logged out');
+        }
+        return $this->sendError('User not logged in');
     }
 }
