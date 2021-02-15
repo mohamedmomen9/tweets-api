@@ -10,6 +10,59 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 class User extends Authenticatable
 {
     use HasApiTokens, Notifiable;
+    /**
+     * @SWG\Definition(
+     *      definition="Login",
+     *      required={"email","password"},
+     *      @SWG\Property(
+     *          property="email",
+     *          description="user email",
+     *          type="string",
+     *          format="email"
+     *      ),
+     *      @SWG\Property(
+     *          property="password",
+     *          description="password",
+     *          type="string",
+     *          format="password"
+     *      )
+     * )
+     *
+     * @SWG\Definition(
+     *      definition="Register",
+     *      required={"email","name","password","confirm_password"},
+     *      @SWG\Property(
+     *          property="name",
+     *          description="user name",
+     *          type="string",
+     *          format="int32"
+     *      ),
+     *      @SWG\Property(
+     *          property="email",
+     *          description="user email",
+     *          type="string",
+     *          format="email"
+     *      ),
+     *      @SWG\Property(
+     *          property="password",
+     *          description="password",
+     *          type="string",
+     *          format="password"
+     *      ),
+     *      @SWG\Property(
+     *          property="confirm_password",
+     *          description="password",
+     *          type="string",
+     *          format="password"
+     *      ),
+     *      @SWG\Property(
+     *          property="image",
+     *          description="upload an image",
+     *          type="file",
+     *          format="binary"
+     *      )
+     * )
+     */
 
     /**
      * The attributes that are mass assignable.
@@ -17,7 +70,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password','remember_token', 'image'
+        'name', 'email', 'password', 'remember_token', 'image'
     ];
 
     /**

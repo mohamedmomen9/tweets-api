@@ -18,12 +18,18 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+
+Route::group(['prefix' => 'v1/'], function () {
+    Route::post('register', 'AuthController@register');
+    Route::post('login', 'AuthController@login');
+});
+
 Route::post('register', 'AuthController@register');
 Route::post('login', 'AuthController@login');
 
-//Route::resource('tweets', 'TweetAPIController');
-
-Route::group(['middleware' => ['auth:sanctum']], function () {
-    Route::apiResource('v1/tweets', 'TweetAPIController');
-    Route::apiResource('v1/follow', 'FollowerAPIController');
+Route::group(['middleware' => ['auth:sanctum'], 'prefix' => 'v1/'], function () {
+    Route::apiResource('tweets', 'TweetAPIController');
+    Route::get('follow','FollowerAPIController@index');
+    Route::post('follow', 'FollowerAPIController@follow');
+    Route::delete('unfollow/{id}', 'FollowerAPIController@unfollow');
 });

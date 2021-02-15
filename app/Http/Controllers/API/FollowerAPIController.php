@@ -19,12 +19,12 @@ class FollowerAPIController extends AppBaseController
      *
      * @SWG\Get(
      *      path="/follow",
-     *      summary="View all tweets",
+     *      summary="View all followed users",
      *      tags={"Follow"},
-     *      description="All Tweet from followed users",
+     *      description="All followed users",
      *      produces={"application/json"},
      *      @SWG\Parameter(
-     *          name="bearer_token",
+     *          name="Authorization",
      *          in="header",
      *          description="Bearer token",
      *          required=true,
@@ -56,12 +56,12 @@ class FollowerAPIController extends AppBaseController
     {
         $id = Auth::id();
         $following = Follower::select('followed_id')->where('follower_id', $id)->get();
-        $followingIds=[$id];
-        foreach($following as $follow){
-            array_push($followingIds,$follow->followed_id);
+        $followingIds = [];
+        foreach ($following as $followedId) {
+            array_push($followingIds, $followedId->followed_id);
         }
-        $tweets = Tweet::whereIn('user', $followingIds)->get();
-        return $tweets;
+        $followed = User::whereIn('id', $followingIds)->get();
+        return $this->sendResponse($followed, 'successfully followed');
     }
 
     /**
@@ -75,7 +75,7 @@ class FollowerAPIController extends AppBaseController
      *      description="Store Follow",
      *      produces={"application/json"},
      *      @SWG\Parameter(
-     *          name="bearer_token",
+     *          name="Authorization",
      *          in="header",
      *          description="Bearer token",
      *          required=true,
@@ -110,33 +110,21 @@ class FollowerAPIController extends AppBaseController
      *      )
      * )
      */
-    public function store(Request $request)
+    public function follow(Request $request)
     {
         $id = Auth::id();
         if ($id == $request->followed_id || !count(User::where('id', $request->followed_id)->get())) {
-            return 'user does not exist';
+            return $this->sendError('user does not exist');
         }
         $input = ['follower_id' => $id, 'followed_id' => $request->followed_id];
         $followed = Follower::where('follower_id', $id)->where('followed_id', $request->followed_id)->get();
         if (count($followed)) {
-            return 'already followed';
+            return $this->sendError('already following this user');
         }
         /** @var Follower $follow */
 
         $follow = Follower::create($input);
-
         return $this->sendResponse(new FollowResource($follow), 'successfully followed');
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
     }
 
     /**
@@ -144,13 +132,13 @@ class FollowerAPIController extends AppBaseController
      * @return Response
      *
      * @SWG\Delete(
-     *      path="/follow/{id}",
+     *      path="/unfollow/{id}",
      *      summary="Unfollow user using id",
      *      tags={"Follow"},
      *      description="Store Follow",
      *      produces={"application/json"},
      *      @SWG\Parameter(
-     *          name="bearer_token",
+     *          name="Authorization",
      *          in="header",
      *          description="Bearer token",
      *          required=true,
@@ -185,10 +173,15 @@ class FollowerAPIController extends AppBaseController
      *      )
      * )
      */
-    public function destroy($id)
+    public function unfollow($id)
     {
+
         $followed = Follower::where('followed_id', $id);
+        if (empty($followed)) {
+            return $this->sendError('User not found');
+        }
         $followed->delete();
-        return 'Deleted';
+
+        return $this->sendSuccess('Unfollowed successfully');
     }
 }

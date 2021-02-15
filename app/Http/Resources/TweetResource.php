@@ -18,7 +18,7 @@ class TweetResource extends JsonResource
             'id' => $this->id,
             'text_en' => $this->text_en,
             'text_ar' => $this->text_ar,
-            'user' => $this->user,
+            'user'=>$this->user,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at
         ];

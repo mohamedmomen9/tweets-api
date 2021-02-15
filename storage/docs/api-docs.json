@@ -6,6 +6,235 @@
     },
     "basePath": "/api/v1",
     "paths": {
+        "/register": {
+            "post": {
+                "tags": [
+                    "Register"
+                ],
+                "summary": "Register new user",
+                "description": "Create new user",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "body",
+                        "in": "body",
+                        "description": "Register new user data",
+                        "required": false,
+                        "schema": {
+                            "$ref": "#/definitions/Register"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "properties": {
+                                "success": {
+                                    "type": "boolean"
+                                },
+                                "data": {
+                                    "$ref": "#/definitions/Register"
+                                },
+                                "message": {
+                                    "type": "string"
+                                }
+                            },
+                            "type": "object"
+                        }
+                    }
+                }
+            }
+        },
+        "/login": {
+            "post": {
+                "tags": [
+                    "Register"
+                ],
+                "summary": "login",
+                "description": "login",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "body",
+                        "in": "body",
+                        "description": "Register new user data",
+                        "required": false,
+                        "schema": {
+                            "$ref": "#/definitions/Login"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "properties": {
+                                "success": {
+                                    "type": "boolean"
+                                },
+                                "data": {
+                                    "$ref": "#/definitions/Login"
+                                },
+                                "message": {
+                                    "type": "string"
+                                }
+                            },
+                            "type": "object"
+                        }
+                    }
+                }
+            }
+        },
+        "/follow": {
+            "get": {
+                "tags": [
+                    "Follow"
+                ],
+                "summary": "View all followed users",
+                "description": "All followed users",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "description": "Bearer token",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/Follow"
+                        },
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "properties": {
+                                "success": {
+                                    "type": "boolean"
+                                },
+                                "data": {
+                                    "$ref": "#/definitions/Tweet"
+                                },
+                                "message": {
+                                    "type": "string"
+                                }
+                            },
+                            "type": "object"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Follow"
+                ],
+                "summary": "Follow user using id",
+                "description": "Store Follow",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "description": "Bearer token",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/Follow"
+                        },
+                        "type": "string"
+                    },
+                    {
+                        "name": "body",
+                        "in": "body",
+                        "description": "User that would be followed",
+                        "required": false,
+                        "schema": {
+                            "$ref": "#/definitions/Follow"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "properties": {
+                                "success": {
+                                    "type": "boolean"
+                                },
+                                "data": {
+                                    "$ref": "#/definitions/Follow"
+                                },
+                                "message": {
+                                    "type": "string"
+                                }
+                            },
+                            "type": "object"
+                        }
+                    }
+                }
+            }
+        },
+        "/unfollow/{id}": {
+            "delete": {
+                "tags": [
+                    "Follow"
+                ],
+                "summary": "Unfollow user using id",
+                "description": "Store Follow",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "description": "Bearer token",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/Follow"
+                        },
+                        "type": "string"
+                    },
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/Follow"
+                        },
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "properties": {
+                                "success": {
+                                    "type": "boolean"
+                                },
+                                "data": {
+                                    "$ref": "#/definitions/Follow"
+                                },
+                                "message": {
+                                    "type": "string"
+                                }
+                            },
+                            "type": "object"
+                        }
+                    }
+                }
+            }
+        },
         "/tweets": {
             "get": {
                 "tags": [
@@ -15,6 +244,18 @@
                 "description": "Get all Tweets",
                 "produces": [
                     "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "description": "Bearer token",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/Follow"
+                        },
+                        "type": "string"
+                    }
                 ],
                 "responses": {
                     "200": {
@@ -49,6 +290,16 @@
                     "application/json"
                 ],
                 "parameters": [
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "description": "Bearer token",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/Tweet"
+                        },
+                        "type": "string"
+                    },
                     {
                         "name": "body",
                         "in": "body",
@@ -92,6 +343,16 @@
                 ],
                 "parameters": [
                     {
+                        "name": "Authorization",
+                        "in": "header",
+                        "description": "Bearer token",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/Tweet"
+                        },
+                        "type": "string"
+                    },
+                    {
                         "name": "id",
                         "in": "path",
                         "description": "id of Tweet",
@@ -129,6 +390,16 @@
                     "application/json"
                 ],
                 "parameters": [
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "description": "Bearer token",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/Tweet"
+                        },
+                        "type": "string"
+                    },
                     {
                         "name": "id",
                         "in": "path",
@@ -177,6 +448,16 @@
                 ],
                 "parameters": [
                     {
+                        "name": "Authorization",
+                        "in": "header",
+                        "description": "Bearer token",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/Tweet"
+                        },
+                        "type": "string"
+                    },
+                    {
                         "name": "id",
                         "in": "path",
                         "description": "id of Tweet",
@@ -207,17 +488,24 @@
         }
     },
     "definitions": {
+        "Follow": {
+            "required": [
+                "followed_id"
+            ],
+            "properties": {
+                "followed_id": {
+                    "description": "followed_id",
+                    "type": "integer",
+                    "format": "int32"
+                }
+            }
+        },
         "Tweet": {
             "required": [
                 "text_en",
                 "text_ar"
             ],
             "properties": {
-                "id": {
-                    "description": "id",
-                    "type": "integer",
-                    "format": "int32"
-                },
                 "text_en": {
                     "description": "text_en",
                     "type": "string"
@@ -225,16 +513,60 @@
                 "text_ar": {
                     "description": "text_ar",
                     "type": "string"
-                },
-                "created_at": {
-                    "description": "created_at",
+                }
+            }
+        },
+        "Login": {
+            "required": [
+                "email",
+                "password"
+            ],
+            "properties": {
+                "email": {
+                    "description": "user email",
                     "type": "string",
-                    "format": "date-time"
+                    "format": "email"
                 },
-                "updated_at": {
-                    "description": "updated_at",
+                "password": {
+                    "description": "password",
                     "type": "string",
-                    "format": "date-time"
+                    "format": "password"
+                }
+            }
+        },
+        "Register": {
+            "required": [
+                "email",
+                "name",
+                "password",
+                "confirm_password",
+                "image"
+            ],
+            "properties": {
+                "email": {
+                    "description": "user email",
+                    "type": "string",
+                    "format": "email"
+                },
+                "name": {
+                    "description": "user name",
+                    "type": "string",
+                    "format": "int32"
+                },
+                "password": {
+                    "description": "password",
+                    "type": "string",
+                    "format": "password"
+                },
+                "confirm_password": {
+                    "description": "password",
+                    "type": "string",
+                    "format": "password"
+                },
+                "image": {
+                    "description": "password",
+                    "type": "string",
+                    "format": "uri"
                 }
             }
         }

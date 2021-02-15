@@ -2,18 +2,17 @@
 
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
 
+use App\Models\Follower;
 use App\User;
-use App\Models\Tweet;
 use Faker\Generator as Faker;
 
-$factory->define(Tweet::class, function (Faker $faker) {
+$factory->define(Follower::class, function (Faker $faker) {
 
     $user = User::first();
-
+    $user2 = factory(User::class)->create();
     return [
-        'text_en' => $faker->word,
-        'text_ar' => $faker->word,
-        'user' => $user->id,
+        'follower_id' => $user->id,
+        'followed_id' => $user2->id,
         'created_at' => $faker->date('Y-m-d H:i:s'),
         'updated_at' => $faker->date('Y-m-d H:i:s')
     ];

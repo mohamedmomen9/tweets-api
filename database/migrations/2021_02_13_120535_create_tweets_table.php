@@ -18,6 +18,7 @@ class CreateTweetsTable extends Migration
             $table->increments('id');
             $table->string('text_en');
             $table->string('text_ar');
+            $table->unsignedInteger('user');
             $table->timestamps();
             $table->softDeletes();
         });

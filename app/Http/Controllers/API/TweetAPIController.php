@@ -10,6 +10,7 @@ use App\Http\Controllers\AppBaseController;
 use App\Http\Resources\TweetResource;
 use Response;
 use Illuminate\Support\Facades\Auth;
+use App\Models\Follower;
 
 /**
  * Class TweetController
@@ -24,10 +25,18 @@ class TweetAPIController extends AppBaseController
      *
      * @SWG\Get(
      *      path="/tweets",
-     *      summary="Get a listing of the Tweets.",
+     *      summary="Get a listing of the Tweets based on followers.",
      *      tags={"Tweet"},
-     *      description="Get all Tweets",
+     *      description="Get all Tweets based on followers",
      *      produces={"application/json"},
+     *      @SWG\Parameter(
+     *          name="Authorization",
+     *          in="header",
+     *          description="Bearer token",
+     *          required=true,
+     *          type="string",
+     *          @SWG\Schema(ref="#/definitions/Follow")
+     *      ),
      *      @SWG\Response(
      *          response=200,
      *          description="successful operation",
@@ -50,19 +59,15 @@ class TweetAPIController extends AppBaseController
      *      )
      * )
      */
-    public function index(Request $request)
+    public function index()
     {
-        $query = Tweet::query();
-
-        if ($request->get('skip')) {
-            $query->skip($request->get('skip'));
+        $id = Auth::id();
+        $following = Follower::select('followed_id')->where('follower_id', $id)->get();
+        $followingIds = [$id];
+        foreach ($following as $follow) {
+            array_push($followingIds, $follow->followed_id);
         }
-        if ($request->get('limit')) {
-            $query->limit($request->get('limit'));
-        }
-
-        $tweets = $query->get();
-
+        $tweets = Tweet::whereIn('user', $followingIds)->get();
         return $this->sendResponse(TweetResource::collection($tweets), 'Tweets retrieved successfully');
     }
 
@@ -77,12 +82,12 @@ class TweetAPIController extends AppBaseController
      *      description="Store Tweet",
      *      produces={"application/json"},
      *      @SWG\Parameter(
-     *          name="bearer_token",
+     *          name="Authorization",
      *          in="header",
      *          description="Bearer token",
      *          required=true,
      *          type="string",
-     *          @SWG\Schema(ref="#/definitions/Follow")
+     *          @SWG\Schema(ref="#/definitions/Tweet")
      *      ),
      *      @SWG\Parameter(
      *          name="body",
@@ -132,6 +137,14 @@ class TweetAPIController extends AppBaseController
      *      tags={"Tweet"},
      *      description="Get Tweet",
      *      produces={"application/json"},
+     *      @SWG\Parameter(
+     *          name="Authorization",
+     *          in="header",
+     *          description="Bearer token",
+     *          required=true,
+     *          type="string",
+     *          @SWG\Schema(ref="#/definitions/Tweet")
+     *      ),
      *      @SWG\Parameter(
      *          name="id",
      *          description="id of Tweet",
@@ -183,6 +196,14 @@ class TweetAPIController extends AppBaseController
      *      tags={"Tweet"},
      *      description="Update Tweet",
      *      produces={"application/json"},
+     *      @SWG\Parameter(
+     *          name="Authorization",
+     *          in="header",
+     *          description="Bearer token",
+     *          required=true,
+     *          type="string",
+     *          @SWG\Schema(ref="#/definitions/Tweet")
+     *      ),
      *      @SWG\Parameter(
      *          name="id",
      *          description="id of Tweet",
@@ -243,6 +264,14 @@ class TweetAPIController extends AppBaseController
      *      tags={"Tweet"},
      *      description="Delete Tweet",
      *      produces={"application/json"},
+     *      @SWG\Parameter(
+     *          name="Authorization",
+     *          in="header",
+     *          description="Bearer token",
+     *          required=true,
+     *          type="string",
+     *          @SWG\Schema(ref="#/definitions/Tweet")
+     *      ),
      *      @SWG\Parameter(
      *          name="id",
      *          description="id of Tweet",

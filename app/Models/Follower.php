@@ -8,30 +8,12 @@ use Illuminate\Database\Eloquent\Model;
 /**
  * @SWG\Definition(
  *      definition="Follow",
- *      required={"followed"},
- *      @SWG\Property(
- *          property="follower_id",
- *          description="follower_id",
- *          type="integer",
- *          format="int32"
- *      ),
+ *      required={"followed_id"},
  *      @SWG\Property(
  *          property="followed_id",
  *          description="followed_id",
  *          type="integer",
  *          format="int32"
- *      ),
- *      @SWG\Property(
- *          property="created_at",
- *          description="created_at",
- *          type="string",
- *          format="date-time"
- *      ),
- *      @SWG\Property(
- *          property="updated_at",
- *          description="updated_at",
- *          type="string",
- *          format="date-time"
  *      )
  * )
  */
